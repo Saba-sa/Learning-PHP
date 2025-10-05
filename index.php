@@ -30,6 +30,12 @@
 
         <button>Del user</button>
     </form>
+    <h2>search</h2>
+    <form class="searchform" action="search.php" method="post">
+        <label for="search">serach for user</label>
+        <input type="text" name="usersearch" id="search" placeholder="serach.....">
+        <button>search</button>
+    </form>
 
 
 </body>
