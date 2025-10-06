@@ -7,7 +7,9 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         require_once 'dbh.inc.php';
         $query = "INSERT INTO users (username, pwd, email) VALUES (?,?,?);";
         $stmt = $pdo->prepare($query);
-        $stmt->execute([$username, $pwd, $email]);
+        $hashpwd=password_hash($pwd, PASSWORD_BCRYPT,['cost'=>12]);
+
+        $stmt->execute([$username, $hashpwd, $email]);
         $pdo=null;
         $stmt=null;
         header('Location: ../index.php');

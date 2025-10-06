@@ -4,13 +4,24 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     $pwd=htmlspecialchars($_POST["pwd"]);
      try{
         require_once 'dbh.inc.php';
-        $query = "Delete from users  where username=:username and pwd=:pwd;" ;
-         $stmt = $pdo->prepare($query);
-        // $stmt->execute([$username, $pwd, $email]);
+        $query = "SELECT pwd FROM users WHERE username = :username;";
+        $stmt = $pdo->prepare($query);
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':pwd', $pwd);
- $stmt->execute();
-        
+        $stmt->execute();
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && password_verify($pwd, $user['pwd'])) {
+            $deleteQuery = "DELETE FROM users WHERE username = :username;";
+            $deleteStmt = $pdo->prepare($deleteQuery);
+            $deleteStmt->bindParam(':username', $username);
+            $deleteStmt->execute();
+            header('Location: ../index.php');
+            exit();
+        } else {
+            echo "❌ Invalid username or password.";
+        }
+
+          
         $pdo=null;
         $stmt=null;
         header('Location: ../index.php');
